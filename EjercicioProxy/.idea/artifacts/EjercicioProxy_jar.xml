@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="EjercicioProxy:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/EjercicioProxy_jar</output-path>
+    <root id="archive" name="EjercicioProxy.jar">
+      <element id="module-output" name="EjercicioProxy" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ejercicioproxy" default="compile.module.ejercicioproxy">
+  <dirname property="module.ejercicioproxy.basedir" file="${ant.file.module_ejercicioproxy}"/>
+  
+  <property name="module.jdk.home.ejercicioproxy" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ejercicioproxy" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ejercicioproxy" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ejercicioproxy" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="ejercicioproxy.output.dir" value="${module.ejercicioproxy.basedir}/classes/production/EjercicioProxy"/>
+  <property name="ejercicioproxy.testoutput.dir" value="${module.ejercicioproxy.basedir}/classes/test/EjercicioProxy"/>
+  
+  <path id="ejercicioproxy.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ejercicioproxy.module.production.classpath">
+    <path refid="${module.jdk.classpath.ejercicioproxy}"/>
+  </path>
+  
+  <path id="ejercicioproxy.runtime.production.module.classpath">
+    <pathelement location="${ejercicioproxy.output.dir}"/>
+  </path>
+  
+  <path id="ejercicioproxy.module.classpath">
+    <path refid="${module.jdk.classpath.ejercicioproxy}"/>
+    <pathelement location="${ejercicioproxy.output.dir}"/>
+  </path>
+  
+  <path id="ejercicioproxy.runtime.module.classpath">
+    <pathelement location="${ejercicioproxy.testoutput.dir}"/>
+    <pathelement location="${ejercicioproxy.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ejercicioproxy">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ejercicioproxy">
+    <patternset refid="excluded.from.module.ejercicioproxy"/>
+  </patternset>
+  
+  <path id="ejercicioproxy.module.sourcepath">
+    <dirset dir="${module.ejercicioproxy.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ejercicioproxy" depends="compile.module.ejercicioproxy.production,compile.module.ejercicioproxy.tests" description="Compile module EjercicioProxy"/>
+  
+  <target name="compile.module.ejercicioproxy.production" depends="register.custom.compilers" description="Compile module EjercicioProxy; production classes">
+    <mkdir dir="${ejercicioproxy.output.dir}"/>
+    <javac2 destdir="${ejercicioproxy.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ejercicioproxy}/javac">
+      <compilerarg line="${compiler.args.ejercicioproxy}"/>
+      <bootclasspath refid="ejercicioproxy.module.bootclasspath"/>
+      <classpath refid="ejercicioproxy.module.production.classpath"/>
+      <src refid="ejercicioproxy.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ejercicioproxy"/>
+    </javac2>
+    
+    <copy todir="${ejercicioproxy.output.dir}">
+      <fileset dir="${module.ejercicioproxy.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ejercicioproxy.tests" depends="register.custom.compilers,compile.module.ejercicioproxy.production" description="compile module EjercicioProxy; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ejercicioproxy" description="cleanup module">
+    <delete dir="${ejercicioproxy.output.dir}"/>
+    <delete dir="${ejercicioproxy.testoutput.dir}"/>
+  </target>
+</project>
